@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customize 10" x 12"</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+</head>
+<body>
+
+<header>
+  <h1>Customize Your 10" x 12" Board</h1>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="memorial-boards.html">Board Selection</a>
+</nav>
+
+<main>
+  <input type="file" id="imageUpload" accept="image/*">
+  <button class="button" id="doneBtn">Done</button>
+
+  <!-- Canvas scaled for 10x12 board -->
+  <canvas id="board-canvas" width="600" height="720"></canvas>
+</main>
+
+<script>
+const canvas = new fabric.Canvas('board-canvas');
+
+// Wooden board background
+fabric.Image.fromURL('wood-board.jpg', function(img){
+  img.set({
+    selectable: false,
+    width: canvas.width,
+    height: canvas.height
+  });
+  canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+});
+
+// Image upload
+document.getElementById('imageUpload').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(f){
+    fabric.Image.fromURL(f.target.result, function(img){
+      img.set({
+        left: 50,
+        top: 50,
+        scaleX: 0.5,
+        scaleY: 0.5
+      });
+      canvas.add(img);
+      canvas.setActiveObject(img);
+    });
+  };
+  reader.readAsDataURL(file);
+});
+
+// Send design to email
+document.getElementById('doneBtn').addEventListener('click', async function(){
+  const dataURL = canvas.toDataURL({ format: 'png' });
+
+  try {
+    const response = await fetch('http://localhost:3000/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageBase64: dataURL })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      alert("Design sent successfully!");
+    } else {
+      alert("Failed to send design.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error sending design.");
+  }
+});
+</script>
+
+</body>
+</html>
