@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Selection</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Select Your Board Size</h1>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="memorial-boards.html">Board Selection</a>
+</nav>
+
+<main>
+  <p>Click a size to customize your memorial board:</p>
+  <div class="size-links">
+    <a href="customization-8x10.html">8" x 10"</a>
+    <a href="customization-10x12.html">10" x 12"</a>
+    <a href="customization-12x15.html">12" x 15"</a>
+  </div>
+</main>
+
+</body>
+</html>
